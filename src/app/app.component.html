@@ -1,22 +1,86 @@
-<nav class="header">
+<div class="root">
+    <img src="assets/images/background.png">
+    <div class="header">
+        <img class="border" src="assets/images/border-top.png">
+        <div class="drag-and-drop"></div>
+        <div class="header-wrapper">
+            <button mat-icon-button (click)="closeApp()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="content" *ngIf="isDataReceived">
+        <div class="left-side">
+            <img class="logo" src="assets/images/logo.png">
+            <button *ngIf="!isGameInstalled && !isGameLoading" mat-raised-button [disabled]="!canInstallGame" (click)="installGame()">Установить</button>
+            <button *ngIf="isGameInstalled && !isGameLoading" mat-raised-button [disabled]="!canUpdateGame" (click)="installGame()">Обновить</button>
+            
+            <mat-spinner color="accent" *ngIf="isGameLoading"></mat-spinner>
+
+            <div class="play-game" *ngIf="canStartGame">
+                <mat-form-field *ngIf="characters">
+                    <mat-label>Выберите игрока</mat-label>
+                    <mat-select [(ngModel)]="selectedCharacterName">
+                        <mat-option *ngFor="let character of characters" [value]="character">{{ character }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf="serverList">
+                    <mat-label>Выберите игрока</mat-label>
+                    <mat-select [(ngModel)]="selectedServerIp">
+                        <mat-option *ngFor="let server of serverList" [value]="server.IpAddress">{{ server.Name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="play-wrapper">
+                    <button mat-raised-button class="play" color="accent"  (click)="startGame()">Играть</button>
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="installGame()">
+                        <mat-icon>build</mat-icon>
+                        <span>Переустановить игру</span>
+                      </button>
+                    </mat-menu>
+                </div>
+            </div>
+            <div class="loading" *ngIf="isGameLoading">
+                <span class="message">{{ gameLoadingMessage }}</span>
+                <mat-progress-bar
+                    color="accent"
+                    class="example-margin"
+                    [value]="valueProgressBar">
+                </mat-progress-bar>
+            </div>
+        </div>
+        <div class="right-side" *ngIf="serverList">
+            <div *ngFor="let server of serverList">
+                <iframe class="tracker" [src]="server.TrustedTrackerUrl"></iframe>
+            </div>
+        </div>
+    </div>
+    <mat-spinner *ngIf="!isDataReceived"></mat-spinner>
+    <div class="contacts">
+        <img (click)="openExternal('http://valheim.by/')" src="assets/images/site.png">
+        <img (click)="openExternal('https://discord.gg/XCA6bPp3qB')" src="assets/images/discord.png">
+    </div>
+</div>
+
+
+
+
+<!-- <nav class="header">
   <div class="title"><h2>xLauncher</h2></div>
   <button mat-icon-button class="close"  color="warn"> <mat-icon class="close">close</mat-icon> </button>
 </nav>
 <div class="content">
-  <div class="left-side">
+  <div class="left-side">dsa
     <button mat-raised-button [disabled]="!validL || validG" (click)="downloadGame()">Установить</button>
     <button mat-raised-button [disabled]="!validL || validG" (click)="updateGame()">Обновить</button>
     <button mat-raised-button [disabled]="!validG || !validL" (click)="startGame()">Играть</button>
     <span></span>
   </div>
 
-  <mat-progress-bar
-    class="example-margin"
-    [value]="50">
-  </mat-progress-bar>
 
   <span *ngIf="!validG || !validL">{{errMessage}}</span>
-
-
 </div>
-
+ -->
