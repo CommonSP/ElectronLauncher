@@ -74,6 +74,21 @@
             flex-direction: column;
         }
 
+        .invalid-launcher-version {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            > span {
+                color: white;
+                font-size: 18px;
+                margin-bottom: 16px;
+                width: 250px;
+                text-align: center;
+            }
+        }
+
         .left-side {
             position: relative;
 
@@ -101,6 +116,18 @@
                 background: white;
                 border-radius: 16px;
                 padding: 16px;
+                width: 250px;
+
+                .play-wrapper {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                .no-admin-rights {
+                    text-align: center;
+                    color: #ff6a00;
+                    font-size: 16px;
+                }
 
                 .play {
                     margin-right: 8px;
@@ -113,31 +140,61 @@
                 top: -50px;
             }
 
-            .loading {
-                position: absolute;
 
-                background-color: white;
-                padding-top: 16px;
-                border-radius: 8px;
-
+            .game-installing {
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
                 align-items: center;
-                width: 90%;
-                bottom: 32px;
 
-                > mat-spinner {
-                    position: absolute;;
+                .loading {
+                    position: absolute;
+    
+                    background-color: white;
+                    padding-top: 16px;
+                    border-radius: 8px;
+    
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 90%;
+                    bottom: 32px;
+    
+                    > mat-spinner {
+                        position: absolute;;
+                    }
+    
+                    span {
+                        font-size: 16px;
+                        margin-bottom: 8px;
+                    }
+    
+                    mat-progress-bar {
+                        height: 16px;
+                    }
                 }
 
-                span {
-                    font-size: 16px;
-                    margin-bottom: 8px;
-                }
+                .installing-error {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    background: white;
+                    border-radius: 10px;
+                    padding: 16px 8px;
+                    box-sizing: border-box;
 
-                mat-progress-bar {
-                    height: 16px;
+                    .title {
+                        color: red;
+                        font-size: 16px;
+                        font-weight: bold;
+                    }
+
+                    .description {
+                        margin: 16px 0;
+                        color: red;
+                        text-align: center;
+                    }
                 }
             }
         }

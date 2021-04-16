@@ -9,29 +9,44 @@
             </button>
         </div>
     </div>
-    <div class="content" *ngIf="isDataReceived">
+    <div class="content" [ngSwitch]="state">
         <div class="left-side">
-            <img class="logo" src="assets/images/logo.png">
-            <button *ngIf="!isGameInstalled && !isGameLoading" mat-raised-button [disabled]="!canInstallGame" (click)="installGame()">Установить</button>
-            <button *ngIf="isGameInstalled && !isGameLoading" mat-raised-button [disabled]="!canUpdateGame" (click)="installGame()">Обновить</button>
-            
-            <mat-spinner color="accent" *ngIf="isGameLoading"></mat-spinner>
-
-            <div class="play-game" *ngIf="canStartGame">
-                <mat-form-field *ngIf="characters">
-                    <mat-label>Выберите игрока</mat-label>
-                    <mat-select [(ngModel)]="selectedCharacterName">
-                        <mat-option *ngFor="let character of characters" [value]="character">{{ character }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div *ngSwitchCase="AppState.FirstInit">
+                <mat-spinner color="accent"></mat-spinner>
+            </div>
+            <div class="invalid-launcher-version" *ngSwitchCase="AppState.InvalidLauncherVersion">
+                <span>Вы используете устаревшую версию лаунчера.</span>
+                <button mat-raised-button color="accent" (click)="openExternal('http://valheim.by/')">Скачать</button>
+            </div>
+            <div *ngSwitchCase="AppState.InvalidGameVersion">
+                <button *ngIf="!isGameInstalled && !isGameLoading" mat-raised-button [disabled]="!canInstallGame"  color="accent" (click)="installGame()">Установить</button>
+                <button *ngIf="isGameInstalled && !isGameLoading" mat-raised-button [disabled]="!canUpdateGame"  color="accent" (click)="installGame()">Обновить</button>
+            </div>
+            <div class="game-installing"  *ngSwitchCase="AppState.Installing">
+                <mat-spinner color="accent" *ngIf="!hasError"></mat-spinner>
+                <div class="loading" *ngIf="!hasError">
+                    <span class="message">{{ gameLoadingMessage }}</span>
+                    <mat-progress-bar
+                        color="accent"
+                        class="example-margin"
+                        [value]="valueProgressBar">
+                    </mat-progress-bar>
+                </div>
+                <div class="installing-error" *ngIf="hasError">
+                    <span class="title">Произошла ошибка</span>
+                    <span class="description">{{ installingError }}</span>
+                    <button mat-raised-button color="accent" (click)="installGame()">Повторить</button>
+                </div>
+            </div>
+            <div class="play-game" *ngSwitchCase="AppState.GameReady">
                 <mat-form-field *ngIf="serverList">
-                    <mat-label>Выберите игрока</mat-label>
+                    <mat-label>Выберите сервер</mat-label>
                     <mat-select [(ngModel)]="selectedServerIp">
                         <mat-option *ngFor="let server of serverList" [value]="server.IpAddress">{{ server.Name }}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <div class="play-wrapper">
-                    <button mat-raised-button class="play" color="accent"  (click)="startGame()">Играть</button>
+                    <button mat-raised-button class="play" color="accent" [disabled]="!isAdmin" (click)="startGame()">Играть</button>
                     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                       <mat-icon>more_vert</mat-icon>
                     </button>
@@ -40,25 +55,25 @@
                         <mat-icon>build</mat-icon>
                         <span>Переустановить игру</span>
                       </button>
+                      <button mat-menu-item (click)="openGameFolder()">
+                        <mat-icon>folder</mat-icon>
+                        <span>Папка с игрой</span>
+                      </button>
+                      <button mat-menu-item (click)="openLogFolder()">
+                        <mat-icon>text_snippet</mat-icon>
+                        <span>Логи</span>
+                      </button>
                     </mat-menu>
+                    <span class="no-admin-rights" *ngIf="!isAdmin">Запустите лаунчер с правами администратора.</span>
                 </div>
             </div>
-            <div class="loading" *ngIf="isGameLoading">
-                <span class="message">{{ gameLoadingMessage }}</span>
-                <mat-progress-bar
-                    color="accent"
-                    class="example-margin"
-                    [value]="valueProgressBar">
-                </mat-progress-bar>
-            </div>
         </div>
-        <div class="right-side" *ngIf="serverList">
+        <div class="right-side" *ngIf="serverList && isLauncherVersionValid">
             <div *ngFor="let server of serverList">
                 <iframe class="tracker" [src]="server.TrustedTrackerUrl"></iframe>
             </div>
         </div>
     </div>
-    <mat-spinner *ngIf="!isDataReceived"></mat-spinner>
     <div class="contacts">
         <img (click)="openExternal('http://valheim.by/')" src="assets/images/site.png">
         <img (click)="openExternal('https://discord.gg/XCA6bPp3qB')" src="assets/images/discord.png">

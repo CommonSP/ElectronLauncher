@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-prod": "electron-builder" 
+    "build-prod": "electron-builder"
   },
   "private": true,
   "dependencies": {
@@ -26,7 +26,10 @@
     "@angular/platform-browser-dynamic": "~11.2.7",
     "@angular/router": "~11.2.7",
     "adm-zip": "^0.4.16",
+    "electron-log": "^4.3.4",
     "electron-reload": "^1.5.0",
+    "electron-updater": "^4.3.8",
+    "is-admin": "^3.0.0",
     "ngx-electron": "^2.2.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
@@ -59,8 +62,14 @@
     "directories": {
       "output": "build"
     },
+    "win": {
+      "target": "nsis",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
     "nsis": {
+      "guid": "2189e09d-ffa7-4ebe-bb7a-f1d98798f2b5",
       "oneClick": false,
+      "perMachine": true,
       "allowToChangeInstallationDirectory": true
     }
   }
